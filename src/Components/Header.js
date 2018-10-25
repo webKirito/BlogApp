@@ -41,14 +41,14 @@ const mapStateToProps = store => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  logoutUser: () => dispatch(logoutUser()),
+  logoutUser: () => dispatch(logoutUser())
 })
 
 const AllowedLinks = (props) => {
   return (
     <Fragment>
       <MenuListItem><StyledLink to='/'>Home</StyledLink></MenuListItem>
-      <MenuListItem><StyledLink to='#' onClick={() => {props.handleLogoutUser()}}>Logout</StyledLink></MenuListItem>
+      <MenuListItem><StyledLink to='#' onClick={() => props.handleLogoutUser()}>Logout</StyledLink></MenuListItem>
     </Fragment>
   )
 }
@@ -56,14 +56,15 @@ const AllowedLinks = (props) => {
 
 class Header extends React.Component {
   render() {
-    const {loggedIn} = this.props.app
-    const {logoutUser} = this.props
+    const { loggedIn } = this.props.app
+    const { logoutUser } = this.props
+    // debugger;
     return (
       <StyledHeader>
         <MenuList>
           {loggedIn ? 
             <AllowedLinks handleLogoutUser={logoutUser}/> : 
-            <MenuListItem><StyledLink to='/login'>Login</StyledLink></MenuListItem> 
+            <MenuListItem><StyledLink to="/login">Login</StyledLink></MenuListItem> 
           }
         </MenuList>
       </StyledHeader>

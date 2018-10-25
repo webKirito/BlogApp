@@ -5,6 +5,7 @@ import {
     REGISTER_USER_ERROR,
     REGISTER_USER_SUCCESS, 
     LOGIN_USER_SUCCESS,
+    SET_ERROR_AS_EMPTY
 } from "../actions/formActions"
 
 const initialState = {
@@ -27,6 +28,8 @@ const formReducer = (state = initialState, action) => {
       return {...state, success : true}
     case REGISTER_USER_SUCCESS : 
       return {...state, success : true }
+      case SET_ERROR_AS_EMPTY : 
+      return {...state, error : "" }
     default:
       return state;
   }

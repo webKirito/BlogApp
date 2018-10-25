@@ -1,14 +1,14 @@
-import { 
-    GET_USER_ERROR,
-    GET_USER_SUCCESS,
-    GET_USER_REQUEST,
-    LOGOUT_USER
-} from "../actions/appActions"
+import {
+  GET_USER_ERROR,
+  GET_USER_SUCCESS,
+  GET_USER_REQUEST,
+  LOGOUT_USER,
+} from '../actions/appActions';
 
 const initialState = {
   user : null,
   isLoading : false,
-  error : "",
+  error : '',
   loggedIn : false,
   loaded : false
 }

@@ -23,8 +23,8 @@ class Home extends Component {
         const { user, isLoading } = this.props.app
         return (
             <div>
-                {isLoading ? "Loading" : "Not loading"}
-                Hello, {user && user.email}
+                <div>{isLoading ? "Loading" : "Not loading"}</div>
+                <div>Hello, {user && user.email}</div>
             </div>
         );
     }
