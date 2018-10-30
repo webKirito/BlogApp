@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import {
   getPosts,
   getCategories,
@@ -21,9 +21,25 @@ const mapStateToProps = state => {
   };
 };
 
+const rand = (left, right) => {
+  return Math.floor(Math.random() * (right - left + 1)) + left;
+};
+
+const stringToColour = str => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) * 23 + ((hash << 5) - hash) / 2;
+  }
+  let colour = "#";
+  for (let i = 0; i < 3; i++) {
+    let value = (hash >> (i * 8)) & 0xff;
+    colour += ("00" + value.toString(16)).substr(-2);
+  }
+  return colour;
+};
+
 const StyledPost = styled.div`
   display: block;
-  height: auto;
   flex-direction: column;
   background-color: white;
   margin: 20px 0;
@@ -36,7 +52,12 @@ const StyledPost = styled.div`
 const StyledPostLine = styled.div`
   border-bottom: 1px solid black;
   padding: 4px;
-  height: 70px;
+  height: 30px;
+`;
+
+const StyledCategoryRandomItem = styled.div`
+  padding: 8px;
+  background-color: ${props => props.color};
 `;
 
 const StyledHeader = styled.div`
@@ -44,6 +65,10 @@ const StyledHeader = styled.div`
   font-weight: bold;
   padding: 0.5rem 0;
   height: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 `;
 
 const StyledPostsContainer = styled.div`
@@ -89,12 +114,47 @@ const StyledBlogMain = styled.div`
   height: 100%;
 `;
 
+const Wrap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+const StyledAvatar = styled.div`
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  text-align: center;
+  background-color: ${props => props.color};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+`;
+const Avatar = ({ name }) => {
+  const shortName = name.charAt(0) + name.charAt(name.length - 1);
+  return (
+    <StyledAvatar color={stringToColour(shortName)}>
+      <div>{shortName.toUpperCase()}</div>
+    </StyledAvatar>
+  );
+};
+
 export const Post = ({ post, handleClick }) => {
   return (
     <StyledPost onClick={() => handleClick(post.id)}>
-      <StyledHeader>{post.title}</StyledHeader>
+      <Wrap>
+        <StyledHeader>
+          <div>{post.title}</div>
+        </StyledHeader>
+        <Avatar name={post.author_name} />
+      </Wrap>
+      <StyledCategoryRandomItem color={stringToColour(post.category_name)}>
+        {post.category_name}
+      </StyledCategoryRandomItem>
       <StyledPostLine>{post.body}</StyledPostLine>
-      <StyledPostLine>{post.category_name}</StyledPostLine>
     </StyledPost>
   );
 };
@@ -115,7 +175,7 @@ class BlogMain extends Component {
     const { posts, isLoading, categories } = this.props.blog;
     return !isLoading ? (
       <StyledBlogMain>
-        <StyledCategoryContainer>
+        <StyledCategoryContainer className="Scroll">
           <StyledCategoryItem
             onClick={() => {
               this.props.getPosts();
@@ -135,7 +195,7 @@ class BlogMain extends Component {
               );
             })}
         </StyledCategoryContainer>
-        <StyledPostsContainer>
+        <StyledPostsContainer className="Scroll">
           {posts.length &&
             posts.map(post => {
               return (

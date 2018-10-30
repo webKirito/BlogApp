@@ -33,7 +33,7 @@ const FormCard = styled.div`
   align-items: center;
   background-color: #fafafa;
   box-shadow: 10px 10px 26px -6px rgba(0, 0, 0, 0.75);
-  height: 25vh;
+  height: 20%;
 `;
 
 const StyledInput = styled(TextField)`

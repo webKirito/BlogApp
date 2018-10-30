@@ -20,7 +20,7 @@ const mapStateToProps = state => {
 };
 
 const StyledPost = styled.div`
-  display: flex;
+  display: block;
   flex-direction: column;
   background-color: white;
   margin-top: 20px;
@@ -46,24 +46,33 @@ const StyledPostsContainer = styled.div`
   flex-direction: column;
   align-items: center;
   background-color: white;
-  width: 80vw;
-  height: 70vh;
+  width: 90%;
+  height: 70%;
+  overflow-y: auto;
 `;
 
 export const Post = ({ post, handleClick, handleDelete }) => {
   return (
     <StyledPost>
+      <StyledHeader>{post.title}</StyledHeader>
+      <StyledPostLine>{post.body}</StyledPostLine>
+      <StyledPostLine>{post.category_name}</StyledPostLine>
       <Button onClick={() => handleDelete(post.id)}>Delete Post</Button>
       <Button onClick={() => handleClick(post.id)}>See More</Button>
       <Button onClick={() => _Router.goTo(`/post/${post.id}/edit`)}>
         Update
       </Button>
-      <StyledHeader>{post.title}</StyledHeader>
-      <StyledPostLine>{post.body}</StyledPostLine>
-      <StyledPostLine>{post.category_name}</StyledPostLine>
     </StyledPost>
   );
 };
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  align-items: center;
+  justify-content: space-around;
+`;
 
 class MyPage extends Component {
   componentDidMount() {
@@ -74,7 +83,7 @@ class MyPage extends Component {
   render() {
     const { posts, isLoading } = this.props.myPage;
     return !isLoading ? (
-      <>
+      <Wrapper>
         <PostForm updatePosts={this.props.getPostsByAuthor} />
         <StyledPostsContainer>
           {!isLoading &&
@@ -92,7 +101,7 @@ class MyPage extends Component {
               );
             })}
         </StyledPostsContainer>
-      </>
+      </Wrapper>
     ) : (
       <Preloader />
     );
