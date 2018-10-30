@@ -1,13 +1,22 @@
-import formReducer from './formReducer'
-import appReducer from './appReducer'
-import routingReducer from './routingReducer'
-import { combineReducers } from 'redux'
-  
- 
-const rootReducer = combineReducers({
-    form : formReducer,
-    app : appReducer,
-    route : routingReducer
-})
+import formReducer from "./formReducer";
+import appReducer from "./appReducer";
+import routingReducer from "./routingReducer";
+import blogReducer from "./blogReducer";
+import postPageReducer from "./postPageReducer";
+import myPageReducer from "./myPageReducer";
+import editPageReducer from "./editPageReducer";
+import commentsReducer from "./commentsReducer";
+import { combineReducers } from "redux";
 
-export default rootReducer
+const rootReducer = combineReducers({
+  form: formReducer,
+  app: appReducer,
+  route: routingReducer,
+  blog: blogReducer,
+  postPage: postPageReducer,
+  myPage: myPageReducer,
+  editPage: editPageReducer,
+  comment: commentsReducer
+});
+
+export default rootReducer;
