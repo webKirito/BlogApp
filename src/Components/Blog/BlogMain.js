@@ -6,18 +6,21 @@ import {
   getCategories,
   getItemsByCategory
 } from "../../actions/blogActions";
+import { selectUser } from "../../actions/selectUserActions";
 import _Router from "../../externalClasses/myRouter";
 import Preloader from "../Preloarer";
 
 const mapDispatchToProps = dispatch => ({
   getPosts: () => dispatch(getPosts()),
   getCategories: () => dispatch(getCategories()),
-  getItemsByCategory: title => dispatch(getItemsByCategory(title))
+  getItemsByCategory: title => dispatch(getItemsByCategory(title)),
+  selectUser: user => dispatch(selectUser(user))
 });
 
 const mapStateToProps = state => {
   return {
-    blog: state.blog
+    blog: state.blog,
+    app: state.app
   };
 };
 
@@ -52,7 +55,6 @@ const StyledPost = styled.div`
 const StyledPostLine = styled.div`
   border-bottom: 1px solid black;
   padding: 4px;
-  height: 30px;
 `;
 
 const StyledCategoryRandomItem = styled.div`
@@ -132,24 +134,33 @@ const StyledAvatar = styled.div`
   align-items: center;
   justify-content: center;
   margin-right: 10px;
+  cursor: pointer;
 `;
-const Avatar = ({ name }) => {
+const Avatar = ({ name, handleUserClick }) => {
   const shortName = name.charAt(0) + name.charAt(name.length - 1);
   return (
-    <StyledAvatar color={stringToColour(shortName)}>
+    <StyledAvatar
+      onClick={() => handleUserClick()}
+      color={stringToColour(shortName)}
+    >
       <div>{shortName.toUpperCase()}</div>
     </StyledAvatar>
   );
 };
 
-export const Post = ({ post, handleClick }) => {
+export const Post = ({ post, handleClick, handleUserClick }) => {
   return (
-    <StyledPost onClick={() => handleClick(post.id)}>
+    <StyledPost>
       <Wrap>
-        <StyledHeader>
+        <StyledHeader onClick={() => handleClick(post.id)}>
           <div>{post.title}</div>
         </StyledHeader>
-        <Avatar name={post.author_name} />
+        <Avatar
+          name={post.author_name}
+          handleUserClick={() =>
+            handleUserClick({ id: post.author_id, login: post.author_name })
+          }
+        />
       </Wrap>
       <StyledCategoryRandomItem color={stringToColour(post.category_name)}>
         {post.category_name}
@@ -170,6 +181,13 @@ class BlogMain extends Component {
     this.props.getPosts();
     this.props.getCategories();
   }
+
+  handleUserClick = user => {
+    this.props.selectUser(user);
+    const route =
+      this.props.app.user.id === user.id ? "/myAccount" : `/author/${user.id}`;
+    _Router.goTo(route);
+  };
 
   render() {
     const { posts, isLoading, categories } = this.props.blog;
@@ -206,6 +224,7 @@ class BlogMain extends Component {
                     _Router.goTo(`/post/${id}`);
                     console.log(id);
                   }}
+                  handleUserClick={this.handleUserClick}
                 />
               );
             })}

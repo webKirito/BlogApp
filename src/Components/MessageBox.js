@@ -5,6 +5,7 @@ import {
   deleteCommentById,
   pushComment
 } from "../actions/commentsActions";
+import { setComment } from "../actions/messageBoxActions";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import styled from "styled-components";
@@ -13,14 +14,16 @@ import Preloader from "./Preloarer";
 const mapStateToProps = state => {
   return {
     comments: state.comment,
-    app: state.app
+    app: state.app,
+    currentComment: state.message
   };
 };
 
 const mapDispatchToProps = dispatch => ({
   getComments: id => dispatch(getComments(id)),
   deleteCommentById: id => dispatch(deleteCommentById(id)),
-  pushComment: (id, data) => dispatch(pushComment(id, data))
+  pushComment: (id, data) => dispatch(pushComment(id, data)),
+  setComment: msg => dispatch(setComment(msg))
 });
 
 const StyledMessage = styled.div`
@@ -43,40 +46,50 @@ const StyledMessageContainer = styled.div`
 `;
 
 const Comment = ({ comment, handleDelete, authorId }) => {
-  console.log(comment);
+  const isMyComment = authorId === comment.author_id;
+  const NiceComment = styled.p`
+    margin-top: 20px;
+  `;
   return (
     <StyledMessage>
-      <div>{comment.body}</div>
-      {authorId === comment.author_id && (
+      <h3>{`RE <${comment.author_name}>:`}</h3>
+      <NiceComment>{comment.body}</NiceComment>
+      {isMyComment && (
         <Button onClick={() => handleDelete(comment.id)}>Delete</Button>
       )}
     </StyledMessage>
   );
 };
-
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  width: 90%;
+  justify-content: space-around;
+`;
 const AddCommentInput = ({ user, postId, value, handleAdd, handleChange }) => {
   return (
-    <div>
+    <Wrapper>
       <TextField
         margin="normal"
         variant="outlined"
-        label="Email"
+        label="Comment"
         type="text"
         onChange={e => handleChange(e.target.value)}
       />
       <Button
-        onClick={() =>
+        onClick={() => {
           handleAdd(postId, {
             body: value,
             post_id: postId,
             author_id: user.id,
             author_name: user.login
-          })
-        }
+          });
+          handleChange("");
+        }}
       >
         Add Comment
       </Button>
-    </div>
+    </Wrapper>
   );
 };
 
@@ -89,9 +102,16 @@ class MessageBox extends Component {
     body: ""
   };
 
+  setComment = msg => {
+    this.setState({
+      ...this.state,
+      body: msg
+    });
+  };
+
   render() {
     const { comments, isLoading } = this.props.comments;
-    console.log("Comments", this.state);
+    const { message } = this.props.currentComment;
     return !isLoading ? (
       <StyledMessageContainer>
         {comments.length &&
@@ -110,7 +130,7 @@ class MessageBox extends Component {
           user={this.props.app.user}
           value={this.state.body}
           handleAdd={this.props.pushComment}
-          handleChange={body => this.setState({ body })}
+          handleChange={this.setComment}
         />
       </StyledMessageContainer>
     ) : (

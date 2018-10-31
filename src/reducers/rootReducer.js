@@ -6,6 +6,8 @@ import postPageReducer from "./postPageReducer";
 import myPageReducer from "./myPageReducer";
 import editPageReducer from "./editPageReducer";
 import commentsReducer from "./commentsReducer";
+import selectedUserReducer from "./selectedUserReducer";
+import messageBoxReducer from "./messageBoxReducer";
 import { combineReducers } from "redux";
 
 const rootReducer = combineReducers({
@@ -16,7 +18,9 @@ const rootReducer = combineReducers({
   postPage: postPageReducer,
   myPage: myPageReducer,
   editPage: editPageReducer,
-  comment: commentsReducer
+  comment: commentsReducer,
+  selectedUser: selectedUserReducer,
+  message: messageBoxReducer
 });
 
 export default rootReducer;

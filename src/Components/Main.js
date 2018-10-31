@@ -27,6 +27,7 @@ class Main extends React.Component {
           <Route path={"/myAccount"} component={MyPage} />
           <Route path={"/post/:id/edit"} component={EditForm} />
           <Route path={"/post/:id"} component={Post} />
+          <Route path={"/author/:id"} component={MyPage} />
         </Switch>
       </AppContainer>
     );

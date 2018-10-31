@@ -15,7 +15,8 @@ const mapDispatchToProps = dispatch => ({
 const mapStateToProps = state => {
   return {
     myPage: state.myPage,
-    app: state.app
+    app: state.app,
+    selectedUser: state.selectedUser
   };
 };
 
@@ -51,17 +52,30 @@ const StyledPostsContainer = styled.div`
   overflow-y: auto;
 `;
 
-export const Post = ({ post, handleClick, handleDelete }) => {
+const AboutUserCardItem = styled.div`
+  display: flex;
+  text-align: center;
+  width: 90%;
+  padding: 10px 0;
+  margin: 10px 0;
+  box-shadow: 10px 10px 29px -8px rgba(0, 0, 0, 0.75);
+`;
+
+export const Post = ({ post, handleClick, handleDelete, isMyPage }) => {
   return (
     <StyledPost>
       <StyledHeader>{post.title}</StyledHeader>
       <StyledPostLine>{post.body}</StyledPostLine>
       <StyledPostLine>{post.category_name}</StyledPostLine>
-      <Button onClick={() => handleDelete(post.id)}>Delete Post</Button>
       <Button onClick={() => handleClick(post.id)}>See More</Button>
-      <Button onClick={() => _Router.goTo(`/post/${post.id}/edit`)}>
-        Update
-      </Button>
+      {isMyPage && (
+        <>
+          <Button onClick={() => _Router.goTo(`/post/${post.id}/edit`)}>
+            Update
+          </Button>
+          <Button onClick={() => handleDelete(post.id)}>Delete Post</Button>
+        </>
+      )}
     </StyledPost>
   );
 };
@@ -76,15 +90,28 @@ const Wrapper = styled.div`
 
 class MyPage extends Component {
   componentDidMount() {
-    const id = this.props.app.user.id;
+    const id =
+      this.processIncomingRoute(this.props.location) || this.props.app.user.id;
     this.props.getPostsByAuthor(id);
   }
 
+  processIncomingRoute = route => {
+    return route.pathname !== "/myAccount"
+      ? this.props.match.params.id
+      : this.props.app.user.id;
+  };
+
   render() {
     const { posts, isLoading } = this.props.myPage;
+    const id = this.processIncomingRoute(this.props.location);
+    const isMyPage = this.props.app.user.id === id;
     return !isLoading ? (
       <Wrapper>
-        <PostForm updatePosts={this.props.getPostsByAuthor} />
+        <AboutUserCardItem>
+          {`Hello, ${this.props.selectedUser.currentUser.login}`}
+        </AboutUserCardItem>
+
+        {isMyPage && <PostForm updatePosts={this.props.getPostsByAuthor} />}
         <StyledPostsContainer>
           {!isLoading &&
             posts.map(post => {
@@ -97,6 +124,7 @@ class MyPage extends Component {
                     console.log(id);
                   }}
                   handleDelete={this.props.deletePostById}
+                  isMyPage={isMyPage}
                 />
               );
             })}
