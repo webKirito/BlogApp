@@ -45,21 +45,33 @@ const StyledPost = styled.div`
   display: block;
   flex-direction: column;
   background-color: white;
+  position: relative;
   margin: 20px 0;
-  padding: 20px 0;
-  border-radius: 10px;
   width: 70%;
-  box-shadow: 10px 10px 29px -8px rgba(0, 0, 0, 0.75);
+  padding: 20px;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.75);
 `;
 
 const StyledPostLine = styled.div`
-  border-bottom: 1px solid black;
   padding: 4px;
+  &::first-letter {
+    color: #8e24aa;
+    text-transform: uppercase;
+  }
 `;
 
 const StyledCategoryRandomItem = styled.div`
   padding: 8px;
-  background-color: ${props => props.color};
+  width: 100%;
+  font-size: 1.2em;
+  background-color: #8e24aa;
+  position: absolute;
+  color: white;
+  top: 0;
+  left: 0;
+  right: 0;
+  box-sizing: border-box;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.75);
 `;
 
 const StyledHeader = styled.div`
@@ -71,6 +83,12 @@ const StyledHeader = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  transition: all ease-in 0.1s;
+
+  &:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+  }
 `;
 
 const StyledPostsContainer = styled.div`
@@ -98,12 +116,14 @@ const StyledCategoryItem = styled.div`
   font-weight: 300;
   text-align: center;
   transition: all 0.3s ease;
-  background-color: #d3d3d3;
-  border-radius: 10px;
-  box-shadow: 10px 10px 30px -6px rgba(0, 0, 0, 0.75);
+  background-color: #c158dc;
+  color: white;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.75);
   width: 90%;
+  transition: all ease-out 0.1s;
   &:hover {
-    background-color: grey;
+    box-shadow: 6px 6px 6px rgba(0, 0, 0, 0.75);
+    background-color: #5c007a;
     cursor: pointer;
   }
 `;
@@ -118,6 +138,7 @@ const StyledBlogMain = styled.div`
 
 const Wrap = styled.div`
   display: flex;
+  margin-top: 10px;
   align-items: center;
   justify-content: space-between;
   width: 100%;
@@ -151,6 +172,7 @@ const Avatar = ({ name, handleUserClick }) => {
 export const Post = ({ post, handleClick, handleUserClick }) => {
   return (
     <StyledPost>
+      <StyledCategoryRandomItem>{post.category_name}</StyledCategoryRandomItem>
       <Wrap>
         <StyledHeader onClick={() => handleClick(post.id)}>
           <div>{post.title}</div>
@@ -162,9 +184,6 @@ export const Post = ({ post, handleClick, handleUserClick }) => {
           }
         />
       </Wrap>
-      <StyledCategoryRandomItem color={stringToColour(post.category_name)}>
-        {post.category_name}
-      </StyledCategoryRandomItem>
       <StyledPostLine>{post.body}</StyledPostLine>
     </StyledPost>
   );

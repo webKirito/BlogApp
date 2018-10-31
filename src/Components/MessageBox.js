@@ -32,24 +32,28 @@ const StyledMessage = styled.div`
   background-color: white;
   margin-top: 20px;
   padding: 20px;
-  border-radius: 10px;
-  width: 70%;
-  box-shadow: 10px 10px 29px -8px rgba(0, 0, 0, 0.75);
+  width: 90%;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.75);
 `;
 
 const StyledMessageContainer = styled.div`
-  display: flex;
-  flex-direction: column-reverse;
-  align-items: center;
+  display: block;
   background-color: white;
-  width: 80vw;
+  padding: 10px;
+  width: 80%;
+  height: 70%;
+  overflow-y: auto;
+`;
+
+const NiceButton = styled(Button)``;
+
+const NiceComment = styled.p`
+  margin: 20px 0;
 `;
 
 const Comment = ({ comment, handleDelete, authorId }) => {
   const isMyComment = authorId === comment.author_id;
-  const NiceComment = styled.p`
-    margin-top: 20px;
-  `;
+
   return (
     <StyledMessage>
       <h3>{`RE <${comment.author_name}>:`}</h3>
@@ -60,38 +64,23 @@ const Comment = ({ comment, handleDelete, authorId }) => {
     </StyledMessage>
   );
 };
+
+const NothingWasFound = () => {
+  return (
+    <StyledMessage>
+      <NiceComment>There is no comment. Left one.</NiceComment>
+    </StyledMessage>
+  );
+};
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
+  flex-direction: column;
   width: 90%;
-  justify-content: space-around;
+  margin-top: 20px;
+  padding: 20px;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.75);
 `;
-const AddCommentInput = ({ user, postId, value, handleAdd, handleChange }) => {
-  return (
-    <Wrapper>
-      <TextField
-        margin="normal"
-        variant="outlined"
-        label="Comment"
-        type="text"
-        onChange={e => handleChange(e.target.value)}
-      />
-      <Button
-        onClick={() => {
-          handleAdd(postId, {
-            body: value,
-            post_id: postId,
-            author_id: user.id,
-            author_name: user.login
-          });
-          handleChange("");
-        }}
-      >
-        Add Comment
-      </Button>
-    </Wrapper>
-  );
-};
 
 class MessageBox extends Component {
   componentDidMount() {
@@ -111,10 +100,10 @@ class MessageBox extends Component {
 
   render() {
     const { comments, isLoading } = this.props.comments;
-    const { message } = this.props.currentComment;
+
     return !isLoading ? (
-      <StyledMessageContainer>
-        {comments.length &&
+      <StyledMessageContainer className="Scroll">
+        {comments.length ? (
           comments.map(comment => {
             return (
               <Comment
@@ -124,14 +113,34 @@ class MessageBox extends Component {
                 handleDelete={this.props.deleteCommentById}
               />
             );
-          })}
-        <AddCommentInput
-          postId={this.props.postId}
-          user={this.props.app.user}
-          value={this.state.body}
-          handleAdd={this.props.pushComment}
-          handleChange={this.setComment}
-        />
+          })
+        ) : (
+          <NothingWasFound />
+        )}
+        <Wrapper>
+          <TextField
+            margin="normal"
+            variant="outlined"
+            label="Comment"
+            type="text"
+            multiline={true}
+            fullWidth={true}
+            onChange={e => this.setComment(e.target.value)}
+          />
+          <Button
+            onClick={() => {
+              this.props.pushComment(this.props.postId, {
+                body: this.state.body,
+                post_id: this.props.postId,
+                author_id: this.props.app.user.id,
+                author_name: this.props.app.user.login
+              });
+              this.setComment("");
+            }}
+          >
+            Add Comment
+          </Button>
+        </Wrapper>
       </StyledMessageContainer>
     ) : (
       <Preloader />

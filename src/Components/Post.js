@@ -16,34 +16,52 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const StyledPost = styled.div`
-  display: flex;
+  display: block;
   flex-direction: column;
   background-color: white;
-  margin-top: 20px;
+  position: relative;
+  margin: 20px 0;
+  width: 80%;
   padding: 20px;
-  border-radius: 10px;
-  width: 70%;
-  box-shadow: 10px 10px 29px -8px rgba(0, 0, 0, 0.75);
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.75);
 `;
 
 const StyledPostLine = styled.div`
-  border-bottom: 1px solid black;
   padding: 4px;
+  &::first-letter {
+    color: #8e24aa;
+    text-transform: uppercase;
+  }
+`;
+
+const StyledCategoryItem = styled.div`
+  padding: 8px;
+  width: 100%;
+  font-size: 1.2em;
+  background-color: #8e24aa;
+  position: absolute;
+  color: white;
+  top: 0;
+  left: 0;
+  right: 0;
+  box-sizing: border-box;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.75);
 `;
 
 const StyledHeader = styled.div`
   font-size: 1.5rem;
   font-weight: bold;
   padding: 0.5rem 0;
-`;
-
-const StyledPostsContainer = styled.div`
+  height: 70px;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   align-items: center;
-  background-color: white;
-  width: 80vw;
-  height: 75vh;
+  justify-content: center;
+  transition: all ease-in 0.1s;
+  &:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+  }
 `;
 
 class Post extends Component {
@@ -58,9 +76,9 @@ class Post extends Component {
     return !isLoading ? (
       <>
         <StyledPost>
+          <StyledCategoryItem>{post.category_name}</StyledCategoryItem>
           <StyledHeader>{post.title}</StyledHeader>
           <StyledPostLine>{post.body}</StyledPostLine>
-          <StyledPostLine>{post.category_name}</StyledPostLine>
         </StyledPost>
         <MessageBox postId={post.id} />
       </>

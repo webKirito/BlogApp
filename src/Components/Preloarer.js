@@ -24,11 +24,11 @@ const PreloaderImg = styled.div`
   animation: ${rotate} 1s linear infinite;
   width: 60px;
   height: 60px;
-  margin: 10px;
+  margin: 30px;
 `;
 
 const PreloaderLine = styled.div`
-  animation: ${rotate} 1.5s ease-in infinite;
+  animation: ${rotate} 0.4s ease-in infinite;
   margin: 20px;
   display: flex;
   justify-content: center;
@@ -39,9 +39,9 @@ const Preloader = () => {
   return (
     <PreloaderContainer>
       <PreloaderLine>
-        <PreloaderImg color="red" />
-        <PreloaderImg color="green" />
-        <PreloaderImg color="blue" />
+        <PreloaderImg color="#c158dc" />
+        <PreloaderImg color="#5c007a" />
+        <PreloaderImg color="#8e24aa" />
       </PreloaderLine>
     </PreloaderContainer>
   );
