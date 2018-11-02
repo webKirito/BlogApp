@@ -12,6 +12,8 @@ import { getPost, updatePost } from "../../actions/editPageActions";
 import { getCategories } from "../../actions/blogActions";
 import Preloader from "../Preloarer";
 
+import PropTypes from "prop-types";
+
 const mapDispatchToProps = dispatch => ({
   getCategories: () => dispatch(getCategories()),
   getPost: id => dispatch(getPost(id)),
@@ -34,27 +36,19 @@ const FormCard = styled.div`
   align-items: center;
   background-color: #fafafa;
   box-shadow: 10px 10px 26px -6px rgba(0, 0, 0, 0.75);
-  height: 25vh;
-`;
-
-const StyledInput = styled(TextField)`
-  width: 90%;
-  margin-top: 20px;
-  font-size: 20px;
+  padding: 20px;
 `;
 
 const StyledFromControl = styled(FormControl)`
   width: 90%;
-  margin: 20px 0;
-  font-size: 20px;
 `;
 
-const Dropdown = ({ items, handleDropwownChange, value, defaultValue }) => {
+const Dropdown = ({ items, handleDropwownChange, value }) => {
   return (
     <StyledFromControl margin="normal">
       <InputLabel htmlFor="category">Category</InputLabel>
       <Select
-        value={value || defaultValue || ""}
+        value={value}
         onChange={e =>
           handleDropwownChange(
             items.find(item => item.title === e.target.value)
@@ -75,6 +69,17 @@ const Dropdown = ({ items, handleDropwownChange, value, defaultValue }) => {
       </Select>
     </StyledFromControl>
   );
+};
+
+Dropdown.propTypes = {
+  items: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired
+    })
+  ).isRequired,
+  handleDropwownChange: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired
 };
 
 class EditForm extends Component {
@@ -107,18 +112,21 @@ class EditForm extends Component {
     const formIsLoading = this.props.editPage.isLoading;
     return !formIsLoading ? (
       <FormCard>
-        <StyledInput
+        <TextField
           margin="normal"
           variant="outlined"
           label="Title"
+          fullWidth
           onChange={e =>
             this.setState({ ...this.state, title: e.target.value })
           }
           defaultValue={post.title || ""}
         />
-        <StyledInput
-          multiline={true}
+        <TextField
+          multiline
+          rows={20}
           margin="normal"
+          fullWidth
           variant="outlined"
           label="Body"
           onChange={e => this.setState({ ...this.state, body: e.target.value })}
@@ -129,15 +137,14 @@ class EditForm extends Component {
             <Dropdown
               items={categories}
               handleDropwownChange={this.setDropdownValue}
-              defaultValue={post.category_name}
-              value={this.state.category.title}
+              value={this.state.category.title || post.category_name || ""}
             />
             <Button
               onClick={() =>
                 this.props.updatePost({
                   ...post,
                   title: this.state.title || post.title,
-                  body: this.state.body || post.title,
+                  body: this.state.body || post.body,
                   category_id: this.state.category.id,
                   category_name: this.state.category.title
                 })

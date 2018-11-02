@@ -26,14 +26,13 @@ const mapStateToProps = state => {
 
 const FormCard = styled.div`
   margin-top: 20px;
-  min-width: 500px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #fafafa;
-  box-shadow: 10px 10px 26px -6px rgba(0, 0, 0, 0.75);
-  height: 20%;
+  background-color: white;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.75);
 `;
 
 const StyledInput = styled(TextField)`
@@ -137,6 +136,7 @@ class PostForm extends Component {
         />
         <StyledInput
           multiline={true}
+          rows={15}
           margin="normal"
           variant="outlined"
           label="Body"

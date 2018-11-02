@@ -20,8 +20,8 @@ const StyledPost = styled.div`
   flex-direction: column;
   background-color: white;
   position: relative;
-  margin: 20px 0;
-  width: 80%;
+  height: 90%;
+  width: 60%;
   padding: 20px;
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.75);
 `;
@@ -64,6 +64,14 @@ const StyledHeader = styled.div`
   }
 `;
 
+const HorizontalWrapper = styled.div`
+  display: flex;
+  height: 100%;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+`;
+
 class Post extends Component {
   componentDidMount() {
     const id = this.props.match.params.id;
@@ -74,14 +82,14 @@ class Post extends Component {
     const { post, isLoading } = this.props.postPage;
     console.log(post);
     return !isLoading ? (
-      <>
+      <HorizontalWrapper>
         <StyledPost>
           <StyledCategoryItem>{post.category_name}</StyledCategoryItem>
           <StyledHeader>{post.title}</StyledHeader>
           <StyledPostLine>{post.body}</StyledPostLine>
         </StyledPost>
         <MessageBox postId={post.id} />
-      </>
+      </HorizontalWrapper>
     ) : (
       <Preloader />
     );

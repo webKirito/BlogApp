@@ -40,15 +40,15 @@ const StyledMessageContainer = styled.div`
   display: block;
   background-color: white;
   padding: 10px;
-  width: 80%;
+  width: 90%;
   height: 70%;
   overflow-y: auto;
 `;
 
-const NiceButton = styled(Button)``;
-
-const NiceComment = styled.p`
+const NiceComment = styled.div`
   margin: 20px 0;
+  width: 100%;
+  word-wrap: break-word;
 `;
 
 const Comment = ({ comment, handleDelete, authorId }) => {
@@ -76,10 +76,20 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  width: 90%;
+  width: 80%;
+  height: 15%;
   margin-top: 20px;
   padding: 20px;
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.75);
+`;
+
+const VerticalWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 90%;
+  width: 35%;
+  align-items: center;
+  justify-content: space-around;
 `;
 
 class MessageBox extends Component {
@@ -102,21 +112,23 @@ class MessageBox extends Component {
     const { comments, isLoading } = this.props.comments;
 
     return !isLoading ? (
-      <StyledMessageContainer className="Scroll">
-        {comments.length ? (
-          comments.map(comment => {
-            return (
-              <Comment
-                key={comment.id}
-                comment={comment}
-                authorId={this.props.app.user.id}
-                handleDelete={this.props.deleteCommentById}
-              />
-            );
-          })
-        ) : (
-          <NothingWasFound />
-        )}
+      <VerticalWrapper>
+        <StyledMessageContainer className="Scroll">
+          {comments.length ? (
+            comments.map(comment => {
+              return (
+                <Comment
+                  key={comment.id}
+                  comment={comment}
+                  authorId={this.props.app.user.id}
+                  handleDelete={this.props.deleteCommentById}
+                />
+              );
+            })
+          ) : (
+            <NothingWasFound />
+          )}
+        </StyledMessageContainer>
         <Wrapper>
           <TextField
             margin="normal"
@@ -124,6 +136,7 @@ class MessageBox extends Component {
             label="Comment"
             type="text"
             multiline={true}
+            rows={2}
             fullWidth={true}
             onChange={e => this.setComment(e.target.value)}
           />
@@ -141,7 +154,7 @@ class MessageBox extends Component {
             Add Comment
           </Button>
         </Wrapper>
-      </StyledMessageContainer>
+      </VerticalWrapper>
     ) : (
       <Preloader />
     );

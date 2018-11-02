@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import {
   getPosts,
   getCategories,
@@ -9,6 +9,7 @@ import {
 import { selectUser } from "../../actions/selectUserActions";
 import _Router from "../../externalClasses/myRouter";
 import Preloader from "../Preloarer";
+import PropTypes from "prop-types";
 
 const mapDispatchToProps = dispatch => ({
   getPosts: () => dispatch(getPosts()),
@@ -22,10 +23,6 @@ const mapStateToProps = state => {
     blog: state.blog,
     app: state.app
   };
-};
-
-const rand = (left, right) => {
-  return Math.floor(Math.random() * (right - left + 1)) + left;
 };
 
 const stringToColour = str => {
@@ -78,7 +75,7 @@ const StyledHeader = styled.div`
   font-size: 1.5rem;
   font-weight: bold;
   padding: 0.5rem 0;
-  height: 70px;
+  width: 60%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -138,7 +135,7 @@ const StyledBlogMain = styled.div`
 
 const Wrap = styled.div`
   display: flex;
-  margin-top: 10px;
+  margin-top: 30px;
   align-items: center;
   justify-content: space-between;
   width: 100%;
@@ -155,8 +152,17 @@ const StyledAvatar = styled.div`
   align-items: center;
   justify-content: center;
   margin-right: 10px;
+  color: white;
   cursor: pointer;
 `;
+
+const NiceDate = styled.div`
+  width: 100%;
+  text-align: right;
+  font-size: 1.1rem;
+  color: #531663;
+`;
+
 const Avatar = ({ name, handleUserClick }) => {
   const shortName = name.charAt(0) + name.charAt(name.length - 1);
   return (
@@ -169,7 +175,21 @@ const Avatar = ({ name, handleUserClick }) => {
   );
 };
 
-export const Post = ({ post, handleClick, handleUserClick }) => {
+Avatar.propTypes = {
+  name: PropTypes.string.isRequired,
+  handleUserClick: PropTypes.func.isRequired
+};
+
+const NothingWasFound = () => {
+  return (
+    <StyledPost>
+      <StyledCategoryRandomItem />
+      <StyledPostLine>Nothing was found by your request!</StyledPostLine>
+    </StyledPost>
+  );
+};
+
+export const Post = ({ post, handleClick, handleUserClick, date }) => {
   return (
     <StyledPost>
       <StyledCategoryRandomItem>{post.category_name}</StyledCategoryRandomItem>
@@ -185,14 +205,23 @@ export const Post = ({ post, handleClick, handleUserClick }) => {
         />
       </Wrap>
       <StyledPostLine>{post.body}</StyledPostLine>
+      <NiceDate>{date}</NiceDate>
     </StyledPost>
   );
 };
 
-export const Categories = ({ categories }) => {
-  return categories.map(category => {
-    return <div key={category.id}>${category}</div>;
-  });
+Post.propTypes = {
+  post: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    body: PropTypes.string.isRequired,
+    author_id: PropTypes.string.isRequired,
+    author_name: PropTypes.string.isRequired,
+    category_name: PropTypes.string.isRequired,
+    category_id: PropTypes.string.isRequired
+  }).isRequired,
+  handleUserClick: PropTypes.func.isRequired,
+  handleClick: PropTypes.func.isRequired
 };
 
 class BlogMain extends Component {
@@ -206,6 +235,15 @@ class BlogMain extends Component {
     const route =
       this.props.app.user.id === user.id ? "/myAccount" : `/author/${user.id}`;
     _Router.goTo(route);
+  };
+
+  niceDate = seconds => {
+    return new Date(seconds).toLocaleDateString("en-US", {
+      weekday: "short",
+      year: "numeric",
+      month: "short",
+      day: "numeric"
+    });
   };
 
   render() {
@@ -233,7 +271,7 @@ class BlogMain extends Component {
             })}
         </StyledCategoryContainer>
         <StyledPostsContainer className="Scroll">
-          {posts.length &&
+          {posts.length ? (
             posts.map(post => {
               return (
                 <Post
@@ -244,9 +282,13 @@ class BlogMain extends Component {
                     console.log(id);
                   }}
                   handleUserClick={this.handleUserClick}
+                  date={this.niceDate(post.posted_at)}
                 />
               );
-            })}
+            })
+          ) : (
+            <NothingWasFound />
+          )}
         </StyledPostsContainer>
       </StyledBlogMain>
     ) : (
@@ -254,6 +296,32 @@ class BlogMain extends Component {
     );
   }
 }
+
+BlogMain.propTypes = {
+  getPosts: PropTypes.func.isRequired,
+  getCategories: PropTypes.func.isRequired,
+  blog: PropTypes.shape({
+    isLoading: PropTypes.bool.isRequired,
+    error: PropTypes.string.isRequired,
+    posts: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+        body: PropTypes.string.isRequired,
+        author_id: PropTypes.string.isRequired,
+        author_name: PropTypes.string.isRequired,
+        category_name: PropTypes.string.isRequired,
+        category_id: PropTypes.string.isRequired
+      })
+    ).isRequired,
+    categories: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired
+      })
+    ).isRequired
+  }).isRequired
+};
 
 export default connect(
   mapStateToProps,

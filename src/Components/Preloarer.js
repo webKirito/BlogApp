@@ -12,8 +12,8 @@ const rotate = keyframes`
 `;
 
 const PreloaderContainer = styled.div`
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -22,8 +22,8 @@ const PreloaderContainer = styled.div`
 const PreloaderImg = styled.div`
   background-color: ${props => props.color};
   animation: ${rotate} 1s linear infinite;
-  width: 60px;
-  height: 60px;
+  width: 30%;
+  height: 30px;
   margin: 30px;
 `;
 
@@ -31,6 +31,7 @@ const PreloaderLine = styled.div`
   animation: ${rotate} 0.4s ease-in infinite;
   margin: 20px;
   display: flex;
+  width: 90%;
   justify-content: center;
   align-items: center;
 `;
