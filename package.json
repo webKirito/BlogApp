@@ -20,18 +20,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:dev": "jest",
     "eject": "react-scripts eject"
-  },
-  "jest": {
-    "setupFiles": [
-      "./test/jestsetup.js"
-    ],
-    "snapshotSerializers": [
-      "enzyme-to-json/serializer"
-    ],
-    "moduleNameMapper": {
-      "^.+\\.(css|scss)$": "identity-obj-proxy"
-    }
   },
   "eslintConfig": {
     "extends": "react-app"

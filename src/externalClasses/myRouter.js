@@ -16,6 +16,9 @@ class Router {
     console.log("router: ", route);
     this.history.push(route);
   }
+  goBack() {
+    this.history.goBack();
+  }
 }
 
 const _Router = new Router();

@@ -1,6 +1,6 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
-
+import PreloaderSvg from "./PreloaderSvg.svg";
 const rotate = keyframes`
   from {
     transform: rotate(0deg);
@@ -19,31 +19,16 @@ const PreloaderContainer = styled.div`
   align-items: center;
 `;
 
-const PreloaderImg = styled.div`
-  background-color: ${props => props.color};
+const PreloaderImg = styled.img`
   animation: ${rotate} 1s linear infinite;
-  width: 30%;
-  height: 30px;
-  margin: 30px;
-`;
-
-const PreloaderLine = styled.div`
-  animation: ${rotate} 0.4s ease-in infinite;
-  margin: 20px;
-  display: flex;
-  width: 90%;
-  justify-content: center;
-  align-items: center;
+  width: 50%;
+  height: 50%;
 `;
 
 const Preloader = () => {
   return (
     <PreloaderContainer>
-      <PreloaderLine>
-        <PreloaderImg color="#c158dc" />
-        <PreloaderImg color="#5c007a" />
-        <PreloaderImg color="#8e24aa" />
-      </PreloaderLine>
+      <PreloaderImg src={PreloaderSvg} />
     </PreloaderContainer>
   );
 };

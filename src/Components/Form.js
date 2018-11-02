@@ -8,6 +8,7 @@ import {
 import TextField from "@material-ui/core/TextField";
 import Checkbox from "@material-ui/core/Checkbox";
 import Button from "@material-ui/core/Button";
+import Preloader from "./Preloarer";
 import styled from "styled-components";
 
 const mapStateToProps = store => {
@@ -196,10 +197,10 @@ class Form extends Component {
   render() {
     console.log(this.props.path);
     const { loginUser, registerUser, setErrorToEmpty } = this.props;
-    const { error } = this.props.form;
+    const { error, isLoading } = this.props.form;
     const { email, password, errors } = this.state;
     this.deleteErrorAfterItsShowing(error, setErrorToEmpty);
-    return (
+    return !isLoading ? (
       <FormCard>
         <StyledInput
           margin="normal"
@@ -244,6 +245,8 @@ class Form extends Component {
           }}
         />
       </FormCard>
+    ) : (
+      <Preloader />
     );
   }
 }

@@ -11,6 +11,7 @@ import Button from "@material-ui/core/Button";
 import { getPost, updatePost } from "../../actions/editPageActions";
 import { getCategories } from "../../actions/blogActions";
 import Preloader from "../Preloarer";
+import _Router from "../../externalClasses/myRouter";
 
 import PropTypes from "prop-types";
 
@@ -151,6 +152,9 @@ class EditForm extends Component {
               }
             >
               Update
+            </Button>
+            <Button color="secondary" onClick={() => _Router.goBack()}>
+              Cancel
             </Button>
           </>
         )}

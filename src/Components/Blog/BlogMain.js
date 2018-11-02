@@ -198,7 +198,7 @@ export const Post = ({ post, handleClick, handleUserClick, date }) => {
           <div>{post.title}</div>
         </StyledHeader>
         <Avatar
-          name={post.author_name}
+          name={post.author_name || "IU"}
           handleUserClick={() =>
             handleUserClick({ id: post.author_id, login: post.author_name })
           }
